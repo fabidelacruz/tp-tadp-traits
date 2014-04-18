@@ -11,12 +11,25 @@ Trait.define do
 
 end
 
+Trait.define do
+  name :OtroTrait
+
+  method :wow do
+    42
+  end
+end
+
 class ClasePrueba
   uses UnTrait
 
   def m1
     1
   end
+end
+
+class ClasePruebaDos
+  uses OtroTrait
+
 end
 
 describe 'Test Traits' do
@@ -26,5 +39,11 @@ describe 'Test Traits' do
     var = ClasePrueba.new
     var.metodo.should == "Hola Mundo"
 
+  end
+
+  it 'Prueba dos' do
+    obj = ClasePruebaDos.new
+    obj.wow.should == 42
+    obj.metodo.should == "Hola Mundo"
   end
 end
