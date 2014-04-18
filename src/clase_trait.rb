@@ -1,16 +1,10 @@
 class Trait
 
-  protected def + (unTrait)
-
-  end
-
-  protected def - (unTrait)
-
-  end
-
   def self.define (&proc)
-
-    instance_eval &proc
+    # Creo una nueva Clase que herede de trait
+    nuevoTrait= Class.new(Trait)
+    #Ahora tengo que usar el class_eval en vez del instance porque ahora tengo otra clase
+    nuevoTrait.class_eval &proc
 
   end
 
