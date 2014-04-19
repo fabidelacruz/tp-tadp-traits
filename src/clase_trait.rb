@@ -8,11 +8,11 @@ class Trait
 
   end
 
-  def name (sym)
+  private def name (sym)
     Object.const_set(sym, self) #Creo una constante para referir al trait
   end
 
-  def method (sym, &block)
+  private def method (sym, &block)
     self.define_singleton_method(sym, &block) #Agrego un método al trait
   end
 

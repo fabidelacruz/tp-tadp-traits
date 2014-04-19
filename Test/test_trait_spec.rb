@@ -41,12 +41,13 @@ describe 'Test Traits' do
 
   end
 
-  it 'Prueba dos' do
+  it 'Los métodos solamente se aplican a la clase correspondiente' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
     expect {
-        obj.metodo.should == "Hola Mundo"
+        obj.should == "Hola Mundo"
     }.to raise_error NoMethodError
 
   end
+
 end
