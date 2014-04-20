@@ -45,7 +45,7 @@ describe 'Test Traits' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
     expect {
-        obj.should == "Hola Mundo"
+        obj.metodo.should == "Hola Mundo"
     }.to raise_error NoMethodError
 
   end
