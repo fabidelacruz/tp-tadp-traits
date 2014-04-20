@@ -3,19 +3,27 @@ require File.expand_path('../src/clase_trait')
 
 Trait.define do
 
-  name :UnTrait
+  nombre :UnTrait
 
-  method :metodo do
+  metodo :metodo do
     "Hola Mundo"
   end
 
 end
 
 Trait.define do
-  name :OtroTrait
+  nombre :OtroTrait
 
-  method :wow do
+  metodo :wow do
     42
+  end
+end
+
+Trait.define do
+  nombre :MetodoRepetido
+
+  metodo :metodo do
+    20
   end
 end
 
@@ -48,6 +56,25 @@ describe 'Test Traits' do
         obj.metodo.should == "Hola Mundo"
     }.to raise_error NoMethodError
 
+  end
+
+  it 'Sumar dos traits que tienen métodos con el mismo nombre da error' do
+
+    expect {
+      class UnaClase
+        uses UnTrait + MetodoRepetido
+      end
+    }.to raise_error RuntimeError
+  end
+
+  it 'Sumar dos trait que tienen metodos diferentes' do
+    class Prueba
+      uses UnTrait + OtroTrait
+    end
+
+    obj = Prueba.new
+    obj.metodo.should == "Hola Mundo"
+    obj.wow.should == 42
   end
 
 end
