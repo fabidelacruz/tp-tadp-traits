@@ -5,7 +5,7 @@ Trait.define do
 
   nombre :UnTrait
 
-  metodo :metodo do
+  metodo :metodoSaludo do
     "Hola Mundo"
   end
 
@@ -17,14 +17,32 @@ Trait.define do
   metodo :wow do
     42
   end
+
+  metodo :metodoSelector do
+    "Hola OtroTrait"
+  end
+
 end
 
 Trait.define do
   nombre :MetodoRepetido
 
-  metodo :metodo do
+  metodo :metodoSaludo do
     20
   end
+end
+
+Trait.define do
+  nombre :TraitSelector
+
+  metodo :metodoMundo do
+    "mundo"
+  end
+
+  metodo :metodoSelector do
+    "Hola Selector"
+  end
+
 end
 
 class ClasePrueba
@@ -40,12 +58,16 @@ class ClasePruebaDos
 
 end
 
+class TodoBienTodoLegal
+  uses OtroTrait + (TraitSelector - :metodoSelector)
+end
+
 describe 'Test Traits' do
 
   it 'Agregar un trait a una clase y ejecutar un metodo provisto por el trait' do
 
     var = ClasePrueba.new
-    var.metodo.should == "Hola Mundo"
+    var.metodoSaludo.should == "Hola Mundo"
 
   end
 
@@ -53,7 +75,7 @@ describe 'Test Traits' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
     expect {
-        obj.metodo.should == "Hola Mundo"
+      obj.metodoSaludo.should == "Hola Mundo"
     }.to raise_error NoMethodError
 
   end
@@ -73,8 +95,17 @@ describe 'Test Traits' do
     end
 
     obj = Prueba.new
-    obj.metodo.should == "Hola Mundo"
+    obj.metodoSaludo.should == "Hola Mundo"
     obj.wow.should == 42
+  end
+
+  it 'Resta de selectores' do
+
+    o = TodoBienTodoLegal.new
+    o.wow.should == 42
+    o.metodoMundo.should == "mundo"
+    o.metodoSelector.should == "Hola OtroTrait"
+
   end
 
 end
