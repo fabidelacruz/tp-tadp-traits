@@ -86,6 +86,9 @@ describe 'Test Traits' do
       class UnaClase
         uses UnTrait + MetodoRepetido
       end
+
+      unObj = UnaClase.new
+      unObj.metodoSaludo
     }.to raise_error RuntimeError
   end
 

@@ -28,12 +28,8 @@ class Trait
 
     trait = Trait.new
 
-    if hay_metodos_iguales(otroTrait)
-      self.lanzar_error_suma
-    else
-      trait.sumar_metodos self
-      trait.sumar_metodos otroTrait
-    end
+    trait.sumar_metodos self
+    trait.sumar_metodos otroTrait
 
     trait
   end
@@ -46,7 +42,12 @@ class Trait
   end
 
   def sumar_metodos (trait)
-    trait.methods(false).each { |metodo| self.definir_metodo_singleton(trait, metodo) }
+    bloqueError = lambda { raise 'Existen 2 metodos con el mismo nombre' }
+    trait.methods(false).each { |metodo| if self.methods(false).include?(metodo) then
+                                           self.define_singleton_method(metodo, &bloqueError)
+                                         else
+                                           self.definir_metodo_singleton(trait, metodo)
+                                         end }
   end
 
   def restar_metodos (trait, unMetodo)
@@ -64,10 +65,6 @@ class Trait
   def hay_metodos_iguales(otroTrait)
     otroTrait.methods(false).any? { |metodo|
       if self.methods(false).include?(metodo) then self.lanzar_error_suma end}
-  end
-
-  def lanzar_error_suma
-    raise 'Existen 2 metodos con el mismo nombre'
   end
 
   private
