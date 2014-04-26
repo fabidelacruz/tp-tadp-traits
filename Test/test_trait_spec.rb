@@ -1,66 +1,5 @@
 require 'rspec'
-require File.expand_path('../src/clase_trait')
-
-Trait.define do
-
-  nombre :UnTrait
-
-  metodo :metodoSaludo do
-    "Hola Mundo"
-  end
-
-end
-
-Trait.define do
-  nombre :OtroTrait
-
-  metodo :wow do
-    42
-  end
-
-  metodo :metodoSelector do
-    "Hola OtroTrait"
-  end
-
-end
-
-Trait.define do
-  nombre :MetodoRepetido
-
-  metodo :metodoSaludo do
-    20
-  end
-end
-
-Trait.define do
-  nombre :TraitSelector
-
-  metodo :metodoMundo do
-    "mundo"
-  end
-
-  metodo :metodoSelector do
-    "Hola Selector"
-  end
-
-end
-
-class ClasePrueba
-  uses UnTrait
-
-  def m1
-    1
-  end
-end
-
-class ClasePruebaDos
-  uses OtroTrait
-
-end
-
-class TodoBienTodoLegal
-  uses OtroTrait + (TraitSelector - :metodoSelector)
-end
+require '../fixture/traits_test'
 
 describe 'Test Traits' do
 
@@ -83,10 +22,6 @@ describe 'Test Traits' do
   it 'Sumar dos traits que tienen métodos con el mismo nombre da error' do
 
     expect {
-      class UnaClase
-        uses UnTrait + MetodoRepetido
-      end
-
       unObj = UnaClase.new
       unObj.metodoSaludo
     }.to raise_error RuntimeError
