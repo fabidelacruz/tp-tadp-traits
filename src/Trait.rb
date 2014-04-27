@@ -6,6 +6,16 @@ class Trait
 
   end
 
+  private
+  def nombre sym
+    Object.const_set sym, self #Creo una constante para referir al trait
+  end
+
+  private
+  def metodo sym, &block
+    self.define_singleton_method sym, &block #Agrego un método al trait
+  end
+
   def + otroTrait
 
     trait = Trait.new
@@ -19,44 +29,30 @@ class Trait
   def - unMetodo
 
     trait = Trait.new
-    trait.agregar_metodos_menos self, unMetodo
+    trait.agregar_metodos_excepto_uno self, unMetodo
 
   end
 
   def sumar_metodos trait
     bloqueError = lambda { raise 'Existen 2 metodos con el mismo nombre' }
-    trait.methods(false).each { |metodo| if self.methods(false).include? metodo then
+    self.agregar_metodos trait, lambda{ |metodo| if self.methods(false).include? metodo then
                                            self.define_singleton_method metodo, &bloqueError
                                          else
                                            self.definir_metodo_singleton trait, metodo
                                          end }
   end
 
-  def agregar_metodos_menos trait, unMetodo
-    trait.methods(false).each { |metodo| unless metodo==unMetodo
-                                           self.definir_metodo_singleton trait, metodo
-                                         end
-    }
+  def agregar_metodos_excepto_uno trait, unMetodo
+     self.agregar_metodos trait, lambda{ |metodo| self.definir_metodo_singleton trait, metodo unless metodo==unMetodo }
     self
   end
 
-  def definir_metodo_singleton (trait, metodo)
+  def agregar_metodos trait, bloque
+    trait.methods(false).each &bloque
+  end
+
+  def definir_metodo_singleton trait, metodo
     self.define_singleton_method metodo, trait.method(metodo).to_proc
-  end
-
-  def hay_metodos_iguales(otroTrait)
-    otroTrait.methods(false).any? { |metodo|
-      if self.methods(false).include?(metodo) then self.lanzar_error_suma end}
-  end
-
-  private
-  def nombre (sym)
-    Object.const_set(sym, self) #Creo una constante para referir al trait
-  end
-
-  private
-  def metodo (sym, &block)
-    self.define_singleton_method(sym, &block) #Agrego un método al trait
   end
 
 end
