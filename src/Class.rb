@@ -2,11 +2,12 @@ class Class
 
   def uses (trait)
 
-    trait.methods.each do |nombre|
+    instanciaTrait = trait.new
+    instanciaTrait.methods.each do |nombre|
 
-      unless self.instance_methods.respond_to?(nombre)
-        block = trait.method(nombre).to_proc
-        define_method(nombre, block)
+      unless self.instance_methods.include? nombre
+        bloque = instanciaTrait.method(nombre).to_proc
+        define_method nombre, bloque
       end
     end
 
