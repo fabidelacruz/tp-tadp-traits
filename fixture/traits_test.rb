@@ -1,5 +1,6 @@
 require '../src/Trait'
 require '../src/Class'
+require '../src/Symbol'
 
 Trait.define do
 
@@ -20,6 +21,10 @@ Trait.define do
 
   metodo :metodoSelector do
     "Hola OtroTrait"
+  end
+
+  metodo :metodoAlias do
+    "Hola"
   end
 
 end
@@ -64,4 +69,8 @@ end
 
 class UnaClase
   uses UnTrait + MetodoRepetido
+end
+
+class ConAlias
+  uses OtroTrait << (:metodoAlias > :saludo)
 end

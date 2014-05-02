@@ -46,4 +46,13 @@ describe 'Test Traits' do
 
   end
 
+  it 'Renombrar selectores' do
+
+    o = ConAlias.new
+    o.saludo.should == "Hola"
+    o.metodoAlias.should == "Hola"
+    o.wow.should == 42
+
+  end
+
 end

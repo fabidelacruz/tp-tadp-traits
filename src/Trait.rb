@@ -6,12 +6,12 @@ class Trait
 
   end
 
-  private
+  #private --Los metodos privados los declaro debajo
   def nombre sym
     Object.const_set sym, self #Creo una constante para referir al trait
   end
 
-  private
+  #private
   def metodo sym, &block
     self.define_singleton_method sym, &block #Agrego un método al trait
   end
@@ -31,6 +31,12 @@ class Trait
     trait = Trait.new
     trait.agregar_metodos_excepto_uno self, unMetodo
 
+  end
+
+  def << renombreSelector
+
+    self.singleton_class.send(:alias_method, renombreSelector[1], renombreSelector[0])
+    self
   end
 
   def sumar_metodos trait
@@ -54,5 +60,7 @@ class Trait
   def definir_metodo_singleton trait, metodo
     self.define_singleton_method metodo, trait.method(metodo).to_proc
   end
+
+  private :nombre, :metodo
 
 end
