@@ -1,7 +1,7 @@
 class Symbol
 
   def > unAlias
-    [self.to_s, unAlias]
+    [self, unAlias]
   end
 
 end

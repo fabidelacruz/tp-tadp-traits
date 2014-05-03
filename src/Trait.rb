@@ -1,5 +1,19 @@
 class Trait
 
+  attr_accessor :metodos, :ancestros
+
+  def initialize
+    self.metodos = Hash.new
+  end
+
+  def self.crear_con_ancestros (unAncsetro, otroAncestro)
+    nuevo = self.new
+    nuevo.ancestros = []
+    nuevo.ancestros << unAncsetro
+    nuevo.ancestros << otroAncestro
+    nuevo
+  end
+
   def self.define &block
 
     self.new.instance_eval &block
@@ -13,52 +27,25 @@ class Trait
 
   #private
   def metodo sym, &block
-    self.define_singleton_method sym, &block #Agrego un método al trait
+    @metodos[sym] = block #Agrego un método al trait
   end
 
   def + otroTrait
-
-    trait = Trait.new
-
-    trait.sumar_metodos self
-    trait.sumar_metodos otroTrait
-
+    trait = Trait.crear_con_ancestros self, otroTrait
+    trait.metodos = self.metodos.merge(otroTrait.metodos)  {|key, old, new| lambda{raise 'Error'}}
     trait
   end
 
   def - unMetodo
-
     trait = Trait.new
-    trait.agregar_metodos_excepto_uno self, unMetodo
-
+    trait.metodos = self.metodos.reject {|key,value| key == unMetodo}
+    trait
   end
 
   def << renombreSelector
-
-    self.singleton_class.send(:alias_method, renombreSelector[1], renombreSelector[0])
-    self
-  end
-
-  def sumar_metodos trait
-    bloqueError = lambda { raise 'Existen 2 metodos con el mismo nombre' }
-    self.agregar_metodos trait, lambda{ |metodo| if self.methods(false).include? metodo then
-                                                   self.define_singleton_method metodo, &bloqueError
-                                                 else
-                                                   self.definir_metodo_singleton trait, metodo
-                                                 end }
-  end
-
-  def agregar_metodos_excepto_uno trait, unMetodo
-    self.agregar_metodos trait, lambda{ |metodo| self.definir_metodo_singleton trait, metodo unless metodo==unMetodo }
-    self
-  end
-
-  def agregar_metodos trait, bloque
-    trait.methods(false).each &bloque
-  end
-
-  def definir_metodo_singleton trait, metodo
-    self.define_singleton_method metodo, trait.method(metodo).to_proc
+    nuevo_trait = self.clone
+    nuevo_trait.metodos[renombreSelector[1]] = nuevo_trait.metodos[renombreSelector[0]]
+    nuevo_trait
   end
 
   private :nombre, :metodo
