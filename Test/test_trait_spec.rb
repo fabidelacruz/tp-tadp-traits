@@ -1,4 +1,5 @@
 require 'rspec'
+require '../src/conflict_error'
 require '../fixture/traits_test'
 
 describe 'Test Traits' do
@@ -24,7 +25,7 @@ describe 'Test Traits' do
     expect {
       unObj = UnaClase.new
       unObj.metodoSaludo
-    }.to raise_error RuntimeError
+    }.to raise_error ConflictError
   end
 
   it 'Sumar dos trait que tienen metodos diferentes' do
