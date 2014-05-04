@@ -8,11 +8,11 @@ class Trait
   end
 
   def self.crear_con_ancestros (unAncestro, otroAncestro)
-    self.new(unAncestro.union_de_metodos(otroAncestro), unAncestro.metodos).agregar_metodos_ancestros(otroAncestro)
+    self.new(unAncestro.union_de_metodos(otroAncestro)).agregar_metodos_ancestros!(unAncestro).agregar_metodos_ancestros!(otroAncestro)
   end
 
-  def agregar_metodos_ancestros(unAncestro)
-    self.metodos_ancestros.merge(unAncestro.metodos_ancestros) { |key, old, new| if old != new then [old, new].flatten else old end }
+  def agregar_metodos_ancestros!(unAncestro)
+    self.metodos_ancestros.merge!(unAncestro.metodos) { |key, old, new| if old != new then [old, new].flatten else old end }
     self
   end
 

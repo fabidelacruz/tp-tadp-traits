@@ -11,6 +11,10 @@ describe 'Test Traits' do
 
   end
 
+  it 'El comportamiento provisto por la clase tiene prioridad sobre el comportamiento birndado por el trait' do
+    ClasePrueba.new.m1.should == 1
+  end
+
   it 'Los metodos solamente se aplican a la clase correspondiente' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
@@ -54,6 +58,10 @@ describe 'Test Traits' do
     o.metodoAlias.should == "Hola"
     o.wow.should == 42
 
+  end
+
+  it 'Al sumar dos traits que contengan el metodoSaludo la cantidad de metodos ancestros para ese selector son 2'do
+    (UnTrait+MetodoRepetido).metodos_ancestros[:metodoSaludo].size.should == 2
   end
 
 end

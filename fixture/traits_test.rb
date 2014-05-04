@@ -10,6 +10,9 @@ Trait.define do
     "Hola Mundo"
   end
 
+  metodo :m1 do
+    23
+  end
 end
 
 Trait.define do
