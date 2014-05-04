@@ -2,20 +2,18 @@ class Trait
 
   attr_accessor :metodos, :metodos_ancestros
 
-  def initialize
-    self.metodos = Hash.new
-    self.metodos_ancestros = Hash.new
+  def initialize(metodos = Hash.new, metodos_ancestros = Hash.new)
+    self.metodos = metodos
+    self.metodos_ancestros = metodos_ancestros
   end
 
-  def self.crear_con_ancestros (unAncsetro, otroAncestro)
-    nuevo = self.new
-    nuevo.agregar_metodos_ancestros unAncsetro.metodos
-    nuevo.agregar_metodos_ancestros otroAncestro.metodos
-    nuevo
+  def self.crear_con_ancestros (unAncestro, otroAncestro)
+    self.new(unAncestro.union_de_metodos(otroAncestro), unAncestro.metodos).agregar_metodos_ancestros(otroAncestro)
   end
 
-  def agregar_metodos_ancestros(metodos)
-    self.metodos_ancestros.merge!(metodos) { |key, old, new| if old != new then [old, new].flatten else old end }
+  def agregar_metodos_ancestros(unAncestro)
+    self.metodos_ancestros.merge(unAncestro.metodos_ancestros) { |key, old, new| if old != new then [old, new].flatten else old end }
+    self
   end
 
   def self.define &block
@@ -33,15 +31,19 @@ class Trait
   end
 
   def + otroTrait
-    trait = Trait.crear_con_ancestros self, otroTrait
-    trait.metodos = self.metodos.merge(otroTrait.metodos)  {|symbol, unBloque, otroBloque| lambda{raise ConflictError.new 'Conflicto generado con el metodo #{symbol}'}}
-    trait
+    Trait.crear_con_ancestros self, otroTrait
+  end
+
+  def union_de_metodos otro_trait
+    self.metodos.merge(otro_trait.metodos) {|symbol, unBloque, otroBloque| lambda{raise ConflictError.new 'Conflicto generado con el metodo #{symbol}'}}
   end
 
   def - unMetodo
-    trait = Trait.new
-    trait.metodos = self.metodos.reject {|symbol, bloque| symbol == unMetodo}
-    trait
+    Trait.new(self.resta_de_metodos(unMetodo), self.metodos_ancestros)
+  end
+
+  def resta_de_metodos(un_metodo)
+    self.metodos.reject {|symbol, bloque| symbol == un_metodo}
   end
 
   def << renombreSelector

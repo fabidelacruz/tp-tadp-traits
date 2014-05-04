@@ -11,7 +11,7 @@ describe 'Test Traits' do
 
   end
 
-  it 'Los métodos solamente se aplican a la clase correspondiente' do
+  it 'Los metodos solamente se aplican a la clase correspondiente' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
     expect {
@@ -20,7 +20,7 @@ describe 'Test Traits' do
 
   end
 
-  it 'Sumar dos traits que tienen métodos con el mismo nombre da error' do
+  it 'Sumar dos traits que tienen metodos con el mismo nombre da error' do
 
     expect {
       unObj = UnaClase.new
