@@ -47,7 +47,7 @@ class Trait
   end
 
   def << renombreSelector
-    nuevo_trait = self.clone
+    nuevo_trait = Trait.new(self.metodos.clone, self.metodos_ancestros.clone)
     nuevo_trait.metodos[renombreSelector[1]] = nuevo_trait.metodos[renombreSelector[0]]
     nuevo_trait
   end

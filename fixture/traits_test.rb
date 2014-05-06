@@ -77,3 +77,7 @@ end
 class ConAlias
   uses OtroTrait << (:metodoAlias > :saludo)
 end
+
+class ConAlias2
+  uses OtroTrait << (:metodoAlias > :saludo2)
+end
