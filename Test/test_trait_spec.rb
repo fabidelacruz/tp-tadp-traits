@@ -64,4 +64,31 @@ describe 'Test Traits' do
     (UnTrait+MetodoRepetido).metodos_ancestros[:metodoSaludo].size.should == 2
   end
 
+  it 'Al sumar dos traits que contengan el sumar_energia y tiene Estrategia Iterativa debe llamar a los dos metodos' do
+    obj = ConEstrategiaIterativa.new
+    obj.sumar_energia 2
+    obj.energia.should == 8
+  end
+
+  it 'Al sumar dos traits que contengan el get_numero y tiene Estrategia Foldeable debe retornar la suma de los retornos'do
+    obj = ConEstrategiaFoldeable.new
+    obj.get_precio.should == 1015
+  end
+
+  it 'Al sumar TraitReal, TraitExagerado, TraitMuyExagerado y usar Estrategia condicional >500 get_precio retorna 1000'do
+    obj = ConEstrategiaCondicional.new
+    obj.get_precio.should == 1000
+  end
+
+  it 'Test que rompe por los ancestros'do
+    class Kabum
+      agregar_estrategia(EstrategiaCondicional.new(:get_precio, &Proc.new{|valor| valor > 500}))
+      uses TraitReal+TraitExagerado+TraitMuyExagerado
+    end
+
+    obj = Kabum.new
+    obj.get_precio.should== 1000 #Lanza error de conflictos porque la lambda esta en los ancestros
+
+  end
+
 end

@@ -35,7 +35,7 @@ class Trait
   end
 
   def union_de_metodos otro_trait
-    self.metodos.merge(otro_trait.metodos) {|symbol, unBloque, otroBloque| lambda{raise ConflictError.new 'Conflicto generado con el metodo #{symbol}'}}
+    self.metodos.merge(otro_trait.metodos) {|symbol, unBloque, otroBloque| lambda{|*args| raise ConflictError.new 'Conflicto generado con el metodo #{symbol}'}}
   end
 
   def - unMetodo
@@ -50,6 +50,14 @@ class Trait
     nuevo_trait = Trait.new(self.metodos.clone, self.metodos_ancestros.clone)
     nuevo_trait.metodos[renombreSelector[1]] = nuevo_trait.metodos[renombreSelector[0]]
     nuevo_trait
+  end
+
+  def get_metodo(selector)
+    self.metodos[selector]
+  end
+
+  def get_metodos_ancestros(selector)
+    self.metodos_ancestros[selector]
   end
 
   private :nombre, :metodo
