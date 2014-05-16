@@ -10,7 +10,7 @@ describe 'Test Traits' do
 
   end
 
-  it 'Los métodos solamente se aplican a la clase correspondiente' do
+  it 'Los metodos que provee un trait solamente se aplican a la clase que lo usa y no a otra' do
     obj = ClasePruebaDos.new
     obj.wow.should == 42
     expect {
