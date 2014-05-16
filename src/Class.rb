@@ -1,14 +1,14 @@
 class Class
 
   def uses (trait)
-    trait.metodos.each {|key, value|
-      unless self.instance_methods(false).include? key
-        if(@estrategias and self.estrategia_para? key)
-          bloque = self.estrategia_para!(key).metodo_solucionador_conflicto(trait)
+    trait.metodos_definidos.each {|selector|
+      unless self.instance_methods(false).include? selector
+        if(@estrategias and self.estrategia_para? selector)
+          bloque = self.estrategia_para!(selector).metodo_solucionador_conflicto(trait)
         else
-          bloque = value
+          bloque = trait.get_metodo(selector)
         end
-        define_method key, bloque
+        define_method selector, bloque
       end
       }
     nil

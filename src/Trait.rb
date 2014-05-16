@@ -1,19 +1,9 @@
 class Trait
 
-  attr_accessor :metodos, :metodos_ancestros
+  attr_accessor :metodos
 
-  def initialize(metodos = Hash.new, metodos_ancestros = Hash.new)
+  def initialize(metodos = Hash.new)
     self.metodos = metodos
-    self.metodos_ancestros = metodos_ancestros
-  end
-
-  def self.crear_con_ancestros (unAncestro, otroAncestro)
-    self.new(unAncestro.union_de_metodos(otroAncestro)).agregar_metodos_ancestros!(unAncestro).agregar_metodos_ancestros!(otroAncestro)
-  end
-
-  def agregar_metodos_ancestros!(unAncestro)
-    self.metodos_ancestros.merge!(unAncestro.metodos) { |key, old, new| if old != new then [old, new].flatten else old end }
-    self
   end
 
   def self.define &block
@@ -31,15 +21,11 @@ class Trait
   end
 
   def + otroTrait
-    Trait.crear_con_ancestros self, otroTrait
-  end
-
-  def union_de_metodos otro_trait
-    self.metodos.merge(otro_trait.metodos) {|symbol, unBloque, otroBloque| lambda{|*args| raise ConflictError.new 'Conflicto generado con el metodo #{symbol}'}}
+    TraitCompuesto.new.union_de_metodos!(self).union_de_metodos!(otroTrait)
   end
 
   def - unMetodo
-    Trait.new(self.resta_de_metodos(unMetodo), self.metodos_ancestros)
+    Trait.new(self.resta_de_metodos(unMetodo))
   end
 
   def resta_de_metodos(un_metodo)
@@ -47,19 +33,56 @@ class Trait
   end
 
   def << renombreSelector
-    nuevo_trait = Trait.new(self.metodos.clone, self.metodos_ancestros.clone)
-    nuevo_trait.metodos[renombreSelector[1]] = nuevo_trait.metodos[renombreSelector[0]]
-    nuevo_trait
+    nuevo_trait = Trait.new(self.metodos.clone)
+    nuevo_trait.agregar_alias!(renombreSelector)
+  end
+
+  def agregar_alias!(renombreSelector)
+    self.metodos[renombreSelector[1]] = self.metodos[renombreSelector[0]]
+    self
   end
 
   def get_metodo(selector)
     self.metodos[selector]
   end
 
-  def get_metodos_ancestros(selector)
-    self.metodos_ancestros[selector]
+  def metodos_definidos
+    self.metodos.keys
   end
 
   private :nombre, :metodo
+
+end
+
+
+class TraitCompuesto < Trait
+
+  def union_de_metodos!(otro_trait)
+    metodos_envueltos = Hash.new
+    otro_trait.metodos.each{ |key,value| metodos_envueltos[key]=[value].flatten}
+    self.metodos.merge!(metodos_envueltos){|key, old, new| old+new}
+    self
+  end
+
+  def - (un_metodo)
+    TraitCompuesto.new(self.resta_de_metodos(un_metodo))
+  end
+
+  def << renombreSelector
+    nuevo_trait = TraitCompuesto.new(self.metodos.clone)
+    nuevo_trait.agregar_alias!(renombreSelector)
+  end
+
+  def get_metodo(selector)
+    if(self.metodos[selector].length == 1)
+      super[0]
+    else
+      lambda{|*args| raise ConflictError.new 'Conflicto generado con el metodo'+selector.to_s}
+    end
+  end
+
+  def get_metodos(selector)
+    self.metodos[selector]
+  end
 
 end

@@ -1,6 +1,6 @@
 require 'rspec'
 require '../src/conflict_error'
-require '../fixture/traits_test'
+require '../fixture/Clases'
 
 describe 'Test Traits' do
 
@@ -58,10 +58,6 @@ describe 'Test Traits' do
     o.metodoAlias.should == "Hola"
     o.wow.should == 42
 
-  end
-
-  it 'Al sumar dos traits que contengan el metodoSaludo la cantidad de metodos ancestros para ese selector son 2'do
-    (UnTrait+MetodoRepetido).metodos_ancestros[:metodoSaludo].size.should == 2
   end
 
   it 'Al sumar dos traits que contengan el sumar_energia y tiene Estrategia Iterativa debe llamar a los dos metodos' do

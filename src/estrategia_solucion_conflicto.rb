@@ -15,7 +15,7 @@ class EstrategiaSolucionConflicto
       begin
         estrategia.ejecutar_metodo(self, trait.get_metodo(estrategia.metodo_asociado), *args)
       rescue ConflictError
-        estrategia.solucion_conflicto(self, trait.get_metodos_ancestros(estrategia.metodo_asociado), *args)
+        estrategia.solucion_conflicto(self, trait.get_metodos(estrategia.metodo_asociado), *args)
       end
     end
   end

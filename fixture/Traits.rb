@@ -54,35 +54,6 @@ Trait.define do
 
 end
 
-class ClasePrueba
-  uses UnTrait
-
-  def m1
-    1
-  end
-end
-
-class ClasePruebaDos
-  uses OtroTrait
-
-end
-
-class TodoBienTodoLegal
-  uses OtroTrait + (TraitSelector - :metodoSelector)
-end
-
-class UnaClase
-  uses UnTrait + MetodoRepetido
-end
-
-class ConAlias
-  uses OtroTrait << (:metodoAlias > :saludo)
-end
-
-class ConAlias2
-  uses OtroTrait << (:metodoAlias > :saludo2)
-end
-
 Trait.define do
   nombre :TraitModificador
 
@@ -126,25 +97,4 @@ Trait.define do
   metodo :get_precio do
     1000000
   end
-end
-
-class ConEstrategiaIterativa
-  agregar_estrategia(EstrategiaIterativa.new(:sumar_energia))
-  uses TraitModificador+TraitCambiador
-
-  def initialize(numero = 0)
-    self.energia = numero
-  end
-
-  attr_accessor :energia
-end
-
-class ConEstrategiaFoldeable
-  agregar_estrategia(EstrategiaFoldeable.new(:get_precio, &Proc.new{|acumulador, valor| acumulador + valor}))
-  uses TraitReal+TraitExagerado
-end
-
-class ConEstrategiaCondicional
-  agregar_estrategia(EstrategiaCondicional.new(:get_precio, &Proc.new{|valor| valor > 500}))
-  uses TraitReal+TraitExagerado
 end
