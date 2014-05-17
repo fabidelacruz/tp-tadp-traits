@@ -51,3 +51,14 @@ class ConEstrategiaCondicional
   agregar_estrategia(EstrategiaCondicional.new(:get_precio, &Proc.new{|valor| valor > 500}))
   uses TraitReal+TraitExagerado
 end
+
+class EstrategiaCantidad < EstrategiaSolucionConflicto
+  def solucion_conflicto(obj, metodos, *args)
+    metodos.size
+  end
+end
+
+class ConEstrategiaCantidad
+  agregar_estrategia(EstrategiaCantidad.new(:metodoSaludo))
+  uses UnTrait+MetodoRepetido
+end

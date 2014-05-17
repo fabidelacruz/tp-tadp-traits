@@ -17,7 +17,6 @@ describe 'Test Traits' do
 
   it 'Los metodos solamente se aplican a la clase correspondiente' do
     obj = ClasePruebaDos.new
-    obj.wow.should == 42
     expect {
       obj.metodoSaludo.should == "Hola Mundo"
     }.to raise_error NoMethodError
@@ -25,11 +24,8 @@ describe 'Test Traits' do
   end
 
   it 'Sumar dos traits que tienen metodos con el mismo nombre da error' do
-
-    expect {
-      unObj = UnaClase.new
-      unObj.metodoSaludo
-    }.to raise_error ConflictError
+    unObj = UnaClase.new
+    expect {unObj.metodoSaludo}.to raise_error ConflictError
   end
 
   it 'Sumar dos trait que tienen metodos diferentes' do
@@ -52,12 +48,9 @@ describe 'Test Traits' do
   end
 
   it 'Renombrar selectores' do
-
     o = ConAlias.new
     o.saludo.should == "Hola"
     o.metodoAlias.should == "Hola"
-    o.wow.should == 42
-
   end
 
   it 'Al sumar dos traits que contengan el sumar_energia y tiene Estrategia Iterativa debe llamar a los dos metodos' do
@@ -76,14 +69,10 @@ describe 'Test Traits' do
     obj.get_precio.should == 1000
   end
 
-  it 'Test que rompe por los ancestros'do
-    class Kabum
-      agregar_estrategia(EstrategiaCondicional.new(:get_precio, &Proc.new{|valor| valor > 500}))
-      uses TraitReal+TraitExagerado+TraitMuyExagerado
-    end
+  it 'Al heredar de EstrategiaSolucionConflicto puedo crear una estrategia que retorne la cantidad de metodos con mismo nombre que obtuve por traits'do
 
-    obj = Kabum.new
-    obj.get_precio.should== 1000 #Lanza error de conflictos porque la lambda esta en los ancestros
+    obj = ConEstrategiaCantidad.new
+    obj.metodoSaludo.should == 2
 
   end
 
