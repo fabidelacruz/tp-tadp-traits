@@ -1,0 +1,2 @@
+class ConflictError < StandardError
+end
